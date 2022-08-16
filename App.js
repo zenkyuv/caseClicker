@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'
+import { useContext } from 'react'
+import UserStore from './s/states-store/states/userStore'
+import { StyleSheet, View } from 'react-native'
+import SignPanel from "./s/components/signPanel"
+import Main from './s/main'
+import { observer } from 'mobx-react-lite'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+	const App = observer(() => {
+	const userStore = useContext(UserStore);
+	return (
+		<View style={styles.container}>
+			{userStore.userLogged ? <Main/> : <SignPanel/>}
+			<StatusBar style="auto" />
+		</View>
+	)
+	})
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+	const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+	},
+	})
+
+export default App
