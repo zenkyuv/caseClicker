@@ -1,6 +1,8 @@
-import {initializeApp} from "firebase/app";
+import app from "@react-native-firebase/app";
 import {doc, getFirestore, setDoc} from 'firebase/firestore';
-import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import auth from '@react-native-firebase/auth';
+import { UserStore } from "../states-store/states/userStore";
+import AppCheck from '@react-native-firebase/app-check';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqW5tht_dhCf7Bgbl--4dVXefLpN6E978",
@@ -13,9 +15,9 @@ const firebaseConfig = {
 	databaseURL: ''
 };
 
-const app = initializeApp(firebaseConfig);
+app.initializeApp(firebaseConfig);
 const db = getFirestore();
-const auth = getAuth();
+// const auth = getAuth();
 
 
 interface UserData {
@@ -32,11 +34,11 @@ interface signUserInfo {
 function createUser({ userData, userStore }: signUserInfo) {
 	const email:string = userData.email
 	const password: string = userData.password
-  createUserWithEmailAndPassword(auth, email, password).then(
+  auth().createUserWithEmailAndPassword(email, password).then(
     (cred: any) => {
       const user = cred.user;
       if (user) {
-        userStore.Logged();
+        userStore.loginUser();
         userStore.setUserUID(user.uid);
 			}
 		
@@ -56,14 +58,34 @@ function signUser (
 	const email:string = userData.email
 	const password:string = userData.password
 console.log(email,password)
-  signInWithEmailAndPassword(auth, email, password)
+  auth().signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
 			if (user) {
 				console.log('zalogowany')
-        userStore.Logged();
-        userStore.setUserUID(user.uid);
+        userStore.loginUser();
+				userStore.setUserUID(user.uid);
+				console.log(user.uid)
+				AppCheck().activate('SHA256key',true).then((res)=>{
+					console.log(res)
+}).catch((err)=>{ console.log("err");
+
+})
+				auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+  // Send token to your backend via HTTPS
+					fetch("http://192.168.1.106:3000/createUser", {
+		// fetch("http://141.94.85.161:3000/openCase", {
+					body: JSON.stringify({idToken: idToken}),
+			method: "POST",
+			headers: {
+				"Content-type": "application/json"
+			},
+		})
+  // ...
+}).catch(function(error) {
+  // Handle error
+});
         // setLoadingIndicator(false);
         // SetPr(email.value, password.value);
         // databaseData(userStore);
@@ -80,10 +102,10 @@ console.log(email,password)
 }
 
 function logout(userStore: any, pageStore: any) {
-  signOut(auth)
+  auth().signOut()
     .then(() => {
       pageStore.makeDashboardNotVisible();
-      userStore.NotLogged();
+      userStore.logoutUser();
     })
     .catch((error) => {
       // An error happened.
@@ -91,5 +113,18 @@ function logout(userStore: any, pageStore: any) {
     });
 }
 
+const checkIfUserLogged = (userStore: UserStore) => {
+	auth().onAuthStateChanged((user) => {
+		if (user) {
+			console.log("zalogowany")
+			userStore.loginUser()
+			userStore.setUserUID(user.uid)
+			const uid = user.uid
+		} else {
+			console.log('nie zalogowany')
+		}
+	})
+}
 
-export { signUser, createUser, logout };
+
+export { signUser, createUser, logout, checkIfUserLogged };
