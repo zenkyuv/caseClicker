@@ -71,8 +71,7 @@ buck-out/
 .expo/
 web-build/
 dist/
-google-services.json
-GoogleService-Info.plist
-
+serviceAccountKey.json
+.env
 
 # @end expo-cli
