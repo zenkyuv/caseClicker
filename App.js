@@ -5,14 +5,18 @@ import { StyleSheet, View } from 'react-native'
 import SignPanel from "./s/components/signPanel"
 import Main from './s/main'
 import { observer } from 'mobx-react-lite'
+import { StoresProvider, stores } from "./s/states-store/store";
 
 	const App = observer(() => {
 	const userStore = useContext(UserStore);
 	return (
+
+		<StoresProvider value={stores}>
 		<View style={styles.container}>
-			{userStore.userLogged ? <Main/> : <SignPanel/>}
+			{userStore.userIsLogged ? <Main/> : <SignPanel/>}
 			<StatusBar style="auto" />
-		</View>
+			</View>
+			</StoresProvider>
 	)
 	})
 
