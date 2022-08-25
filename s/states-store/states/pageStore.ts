@@ -3,7 +3,8 @@ import { observable } from 'mobx';
 import { createContext } from 'react';
 
 export class PageStore {
-  @observable inventoryVisible = false;
+	@observable inventoryVisible = false;
+	@observable clickerVisible = false
 
   constructor() {
     makeObservable(this);
@@ -11,6 +12,10 @@ export class PageStore {
 
   @action setInventoryVisible = (bool: boolean) => {
     this.inventoryVisible = bool;
+	};
+	
+	@action setClickerVisible = (bool: boolean) => {
+    this.clickerVisible = bool;
   };
 }
 const pageStore = new PageStore();

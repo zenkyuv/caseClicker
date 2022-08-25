@@ -3,7 +3,7 @@ import { observable } from 'mobx';
 import { createContext } from 'react';
 
 export class UserStore {
-  @observable userLogged:boolean = false;
+  @observable userIsLogged:boolean = false;
   userUID:string = '';
   @observable dbDataLoading: boolean = true;
 
@@ -12,13 +12,13 @@ export class UserStore {
   }
 
   @action
-  NotLogged() {
-    this.userLogged = false;
+  logoutUser() {
+    this.userIsLogged = false;
   }
 
   @action
-  Logged() {
-    this.userLogged = true;
+  loginUser() {
+    this.userIsLogged = true;
   }
 
   @action
