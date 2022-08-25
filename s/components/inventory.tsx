@@ -4,7 +4,7 @@ import BlurView from "expo-blur/build/BlurView";
 // import LinearGradient from 'react-native-linear-gradient';
 import { ScrollView } from "react-native";
 import { useState } from "react";
-import CaseOpener from "./caseOpener";
+import CaseOpener from "./caseOpener/caseOpener";
 const Inventory = () => {
 
 const [showCaseOpener, setCaseOpener] = useState(false)

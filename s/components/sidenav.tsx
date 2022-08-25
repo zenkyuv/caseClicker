@@ -17,6 +17,9 @@ const Sidenav = () => {
 					<Pressable onPress={() => {pageStore.setInventoryVisible(bool), setBool(!bool)}}>
 						<Image style={styles.icon} source={require("../images/briefcase4.png")} />
 					</Pressable>
+					<Pressable onPress={() => {pageStore.setClickerVisible(bool), setBool(!bool)}}>
+						<Image style={styles.icon} source={require("../images/click.png")} />
+					</Pressable>
 				</BlurView>
       );
 }
