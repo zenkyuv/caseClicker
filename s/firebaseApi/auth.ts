@@ -1,8 +1,8 @@
-import app from "@react-native-firebase/app";
+import app, { initializeApp } from "firebase/app";
 import {doc, getFirestore, setDoc} from 'firebase/firestore';
-import auth from '@react-native-firebase/auth';
+import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut}from 'firebase/auth';
 import { UserStore } from "../states-store/states/userStore";
-import AppCheck from '@react-native-firebase/app-check';
+// import AppCheck from '@react-native-firebase/app-check';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqW5tht_dhCf7Bgbl--4dVXefLpN6E978",
@@ -15,9 +15,9 @@ const firebaseConfig = {
 	databaseURL: ''
 };
 
-app.initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const db = getFirestore();
-// const auth = getAuth();
+const auth = getAuth();
 
 
 interface UserData {
@@ -34,7 +34,7 @@ interface signUserInfo {
 function createUser({ userData, userStore }: signUserInfo) {
 	const email:string = userData.email
 	const password: string = userData.password
-  auth().createUserWithEmailAndPassword(email, password).then(
+  createUserWithEmailAndPassword(auth, email, password).then(
     (cred: any) => {
       const user = cred.user;
       if (user) {
@@ -58,7 +58,7 @@ function signUser (
 	const email:string = userData.email
 	const password:string = userData.password
 console.log(email,password)
-  auth().signInWithEmailAndPassword(email, password)
+  signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
@@ -67,12 +67,7 @@ console.log(email,password)
         userStore.loginUser();
 				userStore.setUserUID(user.uid);
 				console.log(user.uid)
-				AppCheck().activate('SHA256key',true).then((res)=>{
-					console.log(res)
-}).catch((err)=>{ console.log("err");
-
-})
-				auth().currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+				auth.currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
   // Send token to your backend via HTTPS
 					fetch("http://192.168.1.106:3000/createUser", {
 		// fetch("http://141.94.85.161:3000/openCase", {
@@ -102,7 +97,7 @@ console.log(email,password)
 }
 
 function logout(userStore: any, pageStore: any) {
-  auth().signOut()
+  signOut(auth)
     .then(() => {
       pageStore.makeDashboardNotVisible();
       userStore.logoutUser();
@@ -114,7 +109,7 @@ function logout(userStore: any, pageStore: any) {
 }
 
 const checkIfUserLogged = (userStore: UserStore) => {
-	auth().onAuthStateChanged((user) => {
+	onAuthStateChanged(auth, (user) => {
 		if (user) {
 			console.log("zalogowany")
 			userStore.loginUser()
