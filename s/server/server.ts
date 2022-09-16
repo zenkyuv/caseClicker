@@ -1,5 +1,5 @@
-import { applicationDefault, initializeApp } from 'firebase-admin/app';
-import express, { NextFunction, Request, Response } from "express";
+import { initializeApp } from 'firebase-admin/app';
+import express, { NextFunction, Response } from "express";
 import { ExpressRequest } from "../interfaces/backendInterfaces";
 import serviceAccount from "../../serviceAccountKey.js";
 import mongoose, { ConnectOptions } from "mongoose";
@@ -9,7 +9,7 @@ import pkg from "firebase-admin";
 import * as dotenv from 'dotenv'
 import cors from 'cors';
 import ip from "ip"
-import { cases, User } from './mongooseModels';
+import { User } from './mongooseModels.js';
 dotenv.config()
 const { auth, credential } = pkg;
 const app = express()
@@ -69,7 +69,7 @@ const connection = mongoose.connect(
 
 const createUser = async (uid: string) => {
 	try {
-		await	new User({_id: uid, name: "Przemek", money: "0"}).save()
+		await	new User({_id: uid, name: "Przemek", money: "0", inventory: []}).save()
 	} catch (err) {
 		console.log(err)
 	}
@@ -86,19 +86,33 @@ app.get("/getMoney", (req: ExpressRequest, res: Response) => {
 })
 
 app.put("/addMoney", (req: ExpressRequest, res: Response) => {
-	console.log(req.idToken)
-	console.log("cos")
 	User.findByIdAndUpdate(req.idToken, { $inc: { money: 100 } }, (err, brote) => {
 		console.log(err, brote)
 	})
 	res.sendStatus(200)
 })
 
-app.post("/openCase", (req: ExpressRequest, res: Response) => {
-	const findCase = cases.findOne({ _id: req.body.caseName })
-	openCase(findCase)
-	console.log(req.body.caseName)
-	res.sendStatus(200)
+app.get("/openCase", async (req: ExpressRequest, res: Response) => {
+	openCase(req.query.caseName, res, req.idToken)
+})
+
+app.put("/sellItem", (req: ExpressRequest, res: Response) => {
+	console.log(req.body.item)
+	User.findById(req.idToken).select({ 'inventory': { $elemMatch: { name: req.body.item } } }).exec((err, brote) => {
+		console.log(err, brote, "here")
+		if (brote.inventory.length > 0) {
+				User.findByIdAndUpdate(req.idToken, { $inc: { money: brote.inventory[0].price['24_hours'].average } }).exec((err, brote) => {
+			console.log(err, brote)
+			if (!err) {
+				User.updateOne({ _id: req.idToken }, { "$pull": { "inventory": { name: req.body.item } } }).exec((err, brote) => {
+					console.log(err,brote)
+				})
+				res.sendStatus(200)
+			}
+		})
+		}
+	
+	})
 })
 
 app.listen(3000, () => console.log("Server is up"))
