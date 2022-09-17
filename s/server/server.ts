@@ -115,4 +115,12 @@ app.put("/sellItem", (req: ExpressRequest, res: Response) => {
 	})
 })
 
+app.get("/getInventory", (req: ExpressRequest, res: Response) => {
+	User.findById(req.idToken).select('inventory').exec((err, brote) => {
+		console.log(err, brote.inventory)
+		res.send(brote.inventory)
+		// res.send(brote)
+	})
+})
+
 app.listen(3000, () => console.log("Server is up"))
