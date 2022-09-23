@@ -3,7 +3,7 @@ import { cases } from "../chestShop/cases"
 import { useEffect, useRef, useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import { styles } from "../../styles/caseOpenerStyles"
-import { firstViewAnimate } from "./caseOpenerAnimation"
+import { caseOpenerAnimation } from "./caseOpenerAnimation"
 import { openCase } from "../../userApiActions/userApiActions"
 import { caseData } from "../../interfaces/frontendInterfaces"
 import { useComponentSize } from "../../customHooks/useComponentSize"
@@ -60,7 +60,7 @@ const CaseOpener = ({name, image, skins}: caseData) => {
 	const renderSkinOpener = () => {
 			if (imageSize?.width && size?.width) {
 				openAnimationFirstView.setValue(-Math.abs(size?.width) * 8)
-				firstViewAnimate(openAnimationFirstView, imageSize?.width, setAnimationFinished)
+				caseOpenerAnimation(openAnimationFirstView, imageSize?.width, setAnimationFinished)
 			}
 
 		return (
