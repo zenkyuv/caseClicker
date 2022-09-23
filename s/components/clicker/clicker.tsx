@@ -1,98 +1,67 @@
-	import { useEffect, useRef, useState } from "react";
-	import { View, Image, Animated, Pressable, Text} from "react-native"
-	import {styles} from "../../../styles/clickerStyles"
 import MoneyAnimation from "./moneyAnimation";
+import { animateCoin } from "./coinAnimation";
+import {styles} from "../../styles/clickerStyles"
+import UserStore from "../../states-store/states/userStore";
+import { View, Animated, Pressable, Text} from "react-native"
+import { addMoney } from "../../userApiActions/userApiActions";
+import { useContext, useEffect, useRef, useState } from "react";
 
 const Clicker = () => {
+	const userStore = useContext(UserStore);
 	const fadeAnim = useRef(new Animated.Value(1)).current;
 	const shakeAnim = useRef(new Animated.Value(0)).current
 	const [moneyArray, setMoneyArray] = useState([])
 	const [earnedMoney, setEarnedMoney] = useState(0)
 	const barFill = useRef(0)
-
-	const animateCoin = (e) => {
-		if (e == 'press') {
-			Animated.timing(fadeAnim, {
-				toValue: 0.9,
-				duration: 200,
-				useNativeDriver: true
-			}).start(({ finished }) => {
-				fadeAnim.setValue(1)
-			
-			});
-		}
-		else if (e == "longpress") {
-			renderMoneyPopup()
-			renderMoneyPopup()
-			renderMoneyPopup()
-			Animated.sequence([
-			Animated.timing(shakeAnim, { toValue: 10, duration: 100, useNativeDriver: true }),
-			Animated.timing(shakeAnim, { toValue: -10, duration: 100, useNativeDriver: true }),
-			Animated.timing(shakeAnim, { toValue: 10, duration: 100, useNativeDriver: true }),
-			Animated.timing(shakeAnim, { toValue: 0, duration: 100, useNativeDriver: true }),
-			]).start((o) => {
-				if (e == 'longpress' && o.finished) {
-					animateCoin(e)
-				}
-			
-		});
-		}
-		
-	}
 	
 	useEffect(() => {
-	// 	if (moneyArray.length > 30) {
-	// 		setMoneyArray([])
-	// }
+		if (barFill.current == 100) {
+			addMoney(userStore)
+		}
+	}, [barFill.current])
+	
+	useEffect(() => {
 		if (moneyArray.length > 0) {
 			let timer = setTimeout(() => {
-				setMoneyArray([])
-			
-			}, 400)
+				setMoneyArray([])}, 400)
 			return () => {
-				console.log('sra')
 			clearTimeout(timer)
-		}
+			}
 		} 
 	
 	}, [moneyArray])
 
 	const stopShake = () => {
 		shakeAnim.stopAnimation()
-		}
+	}
 
 	const renderMoneyPopup = () => {
 		barFill.current += 1
-		if (barFill.current == 100) {
+		if (barFill.current == 101) {
 			setMoneyArray([])
 			barFill.current = 0
 		}
 		setMoneyArray((old) => [...old,
-		<MoneyAnimation setEarnedMoney={setEarnedMoney} setMoneyArray={setMoneyArray} delay={moneyArray.length} />])
+		<MoneyAnimation delay={moneyArray.length} />])
 	}
 
-	const an1 = {
+	const animationStyle = {
 		transform: [{ scale: fadeAnim }, { translateX: shakeAnim }],
 		}
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.imgContainer}>
-				<Pressable onLongPress={() => {animateCoin("longpress"), renderMoneyPopup()}} onPressOut={stopShake}
-					onPress={() => {animateCoin("press"),renderMoneyPopup()}}>
-					<Animated.Image style={
-						[styles.icon, an1]
-					} source={require("../../../images/coin.png")} />
-					{/* <Animated.Text style={[styles.moneyText, moneyAnimStyle]}>d</Animated.Text> */}
-					
-						{moneyArray.map((e,i) => e)}
-					
+				<Pressable onLongPress={() => { animateCoin("longpress", fadeAnim, shakeAnim, renderMoneyPopup), renderMoneyPopup() }}
+					onPressOut={stopShake} onPress={() => {animateCoin("press", fadeAnim, shakeAnim, renderMoneyPopup),renderMoneyPopup()}}>
+					<Animated.Image style={[styles.icon, animationStyle]} source={require("../../images/coin.png")} />
+						{moneyArray.map((MoneyAnimation, i) => MoneyAnimation)}
 				</Pressable>
-				<View>
-					<View style={styles.bar}>
-						<Text style={styles.barText}>{earnedMoney.toFixed(1)}$</Text>
-						<View style={[styles.filledBar, {width: barFill.current * 2}]}></View>
-					</View>
+			</View>
+			<View>
+				<View style={styles.bar}>
+					<Text style={styles.barText}>{earnedMoney.toFixed(1)}$</Text>
+					<View style={[styles.filledBar, {width: barFill.current * 2}]}></View>
 				</View>
 			</View>
 		</View>
