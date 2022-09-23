@@ -1,5 +1,5 @@
 import MoneyAnimation from "./moneyAnimation";
-import { animateCoin } from "./coinAnimation";
+import { animateCoin } from "./animateCoin";
 import {styles} from "../../styles/clickerStyles"
 import UserStore from "../../states-store/states/userStore";
 import { View, Animated, Pressable, Text} from "react-native"
