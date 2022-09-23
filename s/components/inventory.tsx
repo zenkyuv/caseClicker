@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from "react";
 import UserStore from "../states-store/states/userStore";
 import { Text, View, Image, Pressable } from "react-native"
 import { sellItem } from "../userApiActions/userApiActions";
-import { getLocalStorageData, removeAndGetLocalStorageData } from "../helperFunctions/getLocalStorageData";
+import { getLocalStorageData, removeAndGetLocalStorageData } from "../helperFunctions/localStorageFunctions";
 
 const Inventory = () => {
 const userStore = useContext(UserStore);
