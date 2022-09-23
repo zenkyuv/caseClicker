@@ -7,18 +7,20 @@ import BlurView from "expo-blur/build/BlurView";
 
 const Sidenav = () => {
 	const pageStore = useContext(PageStore);
-	let [bool, setBool] = useState(false)
       return(
-				<BlurView style={styles.container}>
+				<BlurView tint="dark" intensity={80} style={styles.container}>
 					<View style={styles.elContainer}>
-						<Image style={styles.iconMain} source={require("../images/csgo-icon3.png")} />
+						<Text style={styles.text}>Case</Text>
 						<Text style={styles.text}>Clicker</Text>
 					</View>
-					<Pressable onPress={() => {pageStore.setInventoryVisible(bool), setBool(!bool)}}>
-						<Image style={styles.icon} source={require("../images/briefcase4.png")} />
+					<Pressable style={styles.navTextCnt} onPress={() => {pageStore.setInventoryVisible(true)}}>
+						<Text style={styles.navText}>Inventory</Text>
 					</Pressable>
-					<Pressable onPress={() => {pageStore.setClickerVisible(bool), setBool(!bool)}}>
-						<Image style={styles.icon} source={require("../images/click.png")} />
+					<Pressable style={styles.navTextCnt} onPress={() => {pageStore.setClickerVisible(true)}}>
+						<Text style={styles.navText}>Clicker</Text>
+					</Pressable>
+					<Pressable style={styles.navTextCnt} onPress={() => {pageStore.setChestShopVisible(true)}}>
+						<Text style={styles.navText}>Cases</Text>
 					</Pressable>
 				</BlurView>
       );
