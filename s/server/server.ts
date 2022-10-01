@@ -41,7 +41,6 @@ async function validateUser(req: ExpressRequest, res: Response, next: NextFuncti
 		await auth()
 			.verifyIdToken(req.method == "GET" ? req.query.idToken : req.body.idToken)
 			.then((decodedToken) => {
-				console.log(decodedToken.uid)
 				req.idToken = decodedToken.uid
 				return next()
 			})
@@ -79,7 +78,6 @@ app.post("/createUser", (req: ExpressRequest, res: Response) => {
 })
 
 app.get("/getMoney", (req: ExpressRequest, res: Response) => {
-	console.log(req.ip)
 			User.findOne({ _id: req.idToken }, 'money', (_err, person) => { 
 				res.send({money: person.money})
 			})
@@ -87,7 +85,6 @@ app.get("/getMoney", (req: ExpressRequest, res: Response) => {
 
 app.put("/addMoney", (req: ExpressRequest, res: Response) => {
 	User.findByIdAndUpdate(req.idToken, { $inc: { money: 100 } }, (err, brote) => {
-		console.log(err, brote)
 	})
 	res.sendStatus(200)
 })
@@ -97,15 +94,11 @@ app.get("/openCase", async (req: ExpressRequest, res: Response) => {
 })
 
 app.put("/sellItem", (req: ExpressRequest, res: Response) => {
-	console.log(req.body.item)
 	User.findById(req.idToken).select({ 'inventory': { $elemMatch: { name: req.body.item } } }).exec((err, brote) => {
-		console.log(err, brote, "here")
 		if (brote.inventory.length > 0) {
 				User.findByIdAndUpdate(req.idToken, { $inc: { money: brote.inventory[0].price['24_hours'].average } }).exec((err, brote) => {
-			console.log(err, brote)
 			if (!err) {
 				User.updateOne({ _id: req.idToken }, { "$pull": { "inventory": { name: req.body.item } } }).exec((err, brote) => {
-					console.log(err,brote)
 				})
 				res.sendStatus(200)
 			}
@@ -117,10 +110,17 @@ app.put("/sellItem", (req: ExpressRequest, res: Response) => {
 
 app.get("/getInventory", (req: ExpressRequest, res: Response) => {
 	User.findById(req.idToken).select('inventory').exec((err, brote) => {
-		console.log(err, brote.inventory)
 		res.send(brote.inventory)
-		// res.send(brote)
 	})
+})
+
+app.get("/coinFlip", (req: ExpressRequest, res: Response) => {
+	const flip = () => {
+		console.log(Math.floor(Math.random()*2))
+		return Math.floor(Math.random()*2)
+	}
+	const value = flip()
+	res.send({data: value})
 })
 
 app.listen(3000, () => console.log("Server is up"))
