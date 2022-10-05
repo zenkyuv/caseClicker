@@ -115,12 +115,21 @@ app.get("/getInventory", (req: ExpressRequest, res: Response) => {
 })
 
 app.get("/coinFlip", (req: ExpressRequest, res: Response) => {
+	const userSelectedCoin = req.query.selectedCoin
+	const betAmount = req.query.betAmount
 	const flip = () => {
-		console.log(Math.floor(Math.random()*2))
 		return Math.floor(Math.random()*2)
 	}
-	const value = flip()
-	res.send({data: value})
+	const drawnCoin = flip()
+	if (drawnCoin == userSelectedCoin) {
+		User.findByIdAndUpdate(req.idToken, { $inc: { money: betAmount } }, (err, brote) => {
+	})
+		res.send({data: "You Won!", drawnCoin: drawnCoin})
+	} else {
+		User.findByIdAndUpdate(req.idToken, { $inc: { money:  -Math.abs(betAmount)} }, (err, brote) => {
+	})
+		res.send({data: "You Lost!", drawnCoin: drawnCoin})
+	}
 })
 
 app.listen(3000, () => console.log("Server is up"))
