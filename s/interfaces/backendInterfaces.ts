@@ -14,7 +14,9 @@ export interface ExpressRequest extends Request {
 	},
 	query: {
 		idToken: string,
-		caseName: string
+		caseName: string,
+		selectedCoin: any,
+		betAmount: any
 	}
 }
 
