@@ -22,6 +22,12 @@ const Sidenav = () => {
 					<Pressable style={styles.navTextCnt} onPress={() => {pageStore.setChestShopVisible(true)}}>
 						<Text style={styles.navText}>Cases</Text>
 					</Pressable>
+					<Pressable style={styles.navTextCnt} onPress={() => {pageStore.setCoinFlipVisible(true)}}>
+						<Text style={styles.navText}>Coin Flip</Text>
+					</Pressable>
+					<Pressable style={styles.navTextCnt} onPress={() => { pageStore.setTradePanelVisible(true)}}>
+						<Text style={styles.navText}>Trade</Text>
+					</Pressable>
 				</BlurView>
       );
 }
