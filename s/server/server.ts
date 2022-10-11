@@ -1,7 +1,6 @@
-import { initializeApp } from 'firebase-admin/app';
+import { applicationDefault, initializeApp } from 'firebase-admin/app';
 import express, { NextFunction, Response } from "express";
 import { ExpressRequest } from "../interfaces/backendInterfaces";
-import serviceAccount from "../../serviceAccountKey.js";
 import mongoose, { ConnectOptions } from "mongoose";
 import websocketServer from './socketServer.js';
 import bodyParser from "body-parser";
@@ -59,9 +58,8 @@ app.use(validateUser)
 // app.use(express.json({ strict: false }))
 // strict
 // Enables or disables only accepting arrays and objects; when disabled will accept anything JSON.parse accepts.
-	initializeApp({
-		credential: credential.cert(serviceAccount)
-	})
+// const serviceAccountKey = JSON.parse(process.env.SERVICE_ACCOUNT_KEY)
+initializeApp({credential: applicationDefault()})
 const connection = mongoose.connect(
     process.env.MONGODB_URL, 
     {
