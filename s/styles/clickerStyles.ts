@@ -3,14 +3,12 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
 	container: {
 		justifyContent: "center",
-		borderWidth: 1,
-		borderColor: 'red',
 		alignItems: 'center',
 		flex: 1
 	},
 	icon: {
-		height: 200,
-		width: 200,
+		height: 220,
+		width: 220,
 	},
 	imgContainer: {
 		// borderWidth: 1,
@@ -34,7 +32,7 @@ export const styles = StyleSheet.create({
 	filledBar: {
 		width: 0,
 		height: 18,
-		backgroundColor: 'red',
+		backgroundColor: 'rgb(255, 167, 0)',
 		borderRadius: 5
 	},
 	barText: {
