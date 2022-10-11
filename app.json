@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "csgocases",
-    "slug": "csgocases",
+    "name": "caseclicker",
+    "slug": "caseclicker",
     "version": "1.0.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
@@ -12,7 +12,9 @@
       "backgroundColor": "#ffffff"
     },
     "androidStatusBar": {
-      "hidden": true
+      "hidden": true,
+			"translucent": false,
+			"backgroundColor": "#C2185B"
     },
     "androidNavigationBar": {
       "visible": "sticky-immersive"
