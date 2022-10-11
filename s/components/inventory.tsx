@@ -1,7 +1,7 @@
 import { ActivityIndicator, ScrollView } from "react-native";
 import BlurView from "expo-blur/build/BlurView";
 import {styles} from "../styles/inventoryStyles"
-import { cases } from "../components/chestShop/cases"
+import { cases } from "./caseShop/cases"
 import { useContext, useEffect, useState } from "react";
 import UserStore from "../states-store/states/userStore";
 import { Text, View, Image, Pressable } from "react-native"

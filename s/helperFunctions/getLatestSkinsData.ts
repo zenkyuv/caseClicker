@@ -1,5 +1,5 @@
-import { cases } from "../components/chestShop/cases"
-import data from "../components/chestShop/itemlist.json"
+import { cases } from "../components/caseShop/cases"
+import data from "../components/caseShop/itemlist.json"
 
 const getLatestSkinData = () => {
 

@@ -1,5 +1,5 @@
 import { BlurView } from "expo-blur"
-import { cases } from "../chestShop/cases"
+import { cases } from "../caseShop/cases"
 import { useEffect, useRef, useState } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import { styles } from "../../styles/caseOpenerStyles"

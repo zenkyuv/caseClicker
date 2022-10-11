@@ -8,7 +8,7 @@ const ProfileBar = () => {
 			<View style={styles.imageContainer}>
 				<Image style={styles.image} source={require("../images/profile-img.jpg")} />
 			</View>
-			<Image style={styles.rank} source={require("../images/silver4.png")} />
+			<Image style={styles.rank} source={require("../images/unranked.png")} />
 			<View style={styles.infoContainer}>
 				<Text style={styles.info}>i</Text>
 			</View>
