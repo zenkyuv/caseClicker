@@ -2,6 +2,8 @@ import app, { initializeApp } from "firebase/app";
 import {doc, getFirestore, setDoc} from 'firebase/firestore';
 import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut}from 'firebase/auth';
 import { UserStore } from "../states-store/states/userStore";
+import { signUserInfo, UserMoney } from "../interfaces/frontendInterfaces";
+import { getInventory, getMoney } from "../userApiActions/userApiActions";
 // import AppCheck from '@react-native-firebase/app-check';
 
 const firebaseConfig = {
@@ -20,17 +22,6 @@ const db = getFirestore();
 const auth = getAuth();
 
 
-interface UserData {
-	email: string,
-	password: string
-}
-
-interface signUserInfo {
-	userData: UserData
-	userStore: any,
-	setLoadingIndicator?: any
-}
-
 function createUser({ userData, userStore }: signUserInfo) {
 	const email:string = userData.email
 	const password: string = userData.password
@@ -39,13 +30,20 @@ function createUser({ userData, userStore }: signUserInfo) {
       const user = cred.user;
       if (user) {
         userStore.loginUser();
-        userStore.setUserUID(user.uid);
+				userStore.setUserUID(user.uid);
+					auth.currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
+  // Send token to your backend via HTTPS
+					fetch("http://141.94.85.161:3000/createUser", {
+					body: JSON.stringify({idToken: idToken, uid: user.uid}),
+						method: "POST",
+						headers: {
+				"Content-type": "application/json"
+			},
+		})
+}).catch((error) => {
+  console.log(error)
+});
 			}
-		
-      return 	setDoc(doc(db,`users/${cred.user.uid}`), {
-				 first: 'Ada',
-        last: 'Lovelace',
-			})
     }
   );
 }
@@ -57,30 +55,15 @@ function signUser (
 ) {
 	const email:string = userData.email
 	const password:string = userData.password
-console.log(email,password)
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
+    .then(async (userCredential) => {
       const user = userCredential.user;
 			if (user) {
-				console.log('zalogowany')
+				await getInventory()
+				console.log('logged')
         userStore.loginUser();
 				userStore.setUserUID(user.uid);
-				console.log(user.uid)
-				auth.currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-  // Send token to your backend via HTTPS
-					fetch("http://192.168.1.106:3000/createUser", {
-		// fetch("http://141.94.85.161:3000/openCase", {
-					body: JSON.stringify({idToken: idToken}),
-			method: "POST",
-			headers: {
-				"Content-type": "application/json"
-			},
-		})
-  // ...
-}).catch(function(error) {
-  // Handle error
-});
+				getMoney(userStore)
         // setLoadingIndicator(false);
         // SetPr(email.value, password.value);
         // databaseData(userStore);
@@ -96,7 +79,7 @@ console.log(email,password)
     });
 }
 
-function logout(userStore: any, pageStore: any) {
+function logout(userStore: UserStore, pageStore: any) {
   signOut(auth)
     .then(() => {
       pageStore.makeDashboardNotVisible();
@@ -109,14 +92,15 @@ function logout(userStore: any, pageStore: any) {
 }
 
 const checkIfUserLogged = (userStore: UserStore) => {
-	onAuthStateChanged(auth, (user) => {
+	onAuthStateChanged(auth, async (user) => {
 		if (user) {
-			console.log("zalogowany")
+			console.log("logged")
 			userStore.loginUser()
 			userStore.setUserUID(user.uid)
+			await getInventory()
 			const uid = user.uid
 		} else {
-			console.log('nie zalogowany')
+			console.log('not logged, error')
 		}
 	})
 }
