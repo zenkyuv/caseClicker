@@ -3,6 +3,7 @@ import express, { NextFunction, Response } from "express";
 import { ExpressRequest } from "../interfaces/backendInterfaces";
 import serviceAccount from "../../serviceAccountKey.js";
 import mongoose, { ConnectOptions } from "mongoose";
+import websocketServer from './socketServer.js';
 import bodyParser from "body-parser";
 import openCase from './openCase.js';
 import pkg from "firebase-admin";
@@ -10,9 +11,12 @@ import * as dotenv from 'dotenv'
 import cors from 'cors';
 import ip from "ip"
 import { User } from './mongooseModels.js';
+import {createServer} from "http"
 dotenv.config()
 const { auth, credential } = pkg;
 const app = express()
+const server = createServer(app)
+websocketServer(server)
 console.dir ( ip.address() );
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -74,7 +78,7 @@ const createUser = async (uid: string) => {
 	}
 }
 app.post("/createUser", (req: ExpressRequest, res: Response) => {
-	createUser(req.idToken)
+	createUser(req.body.uid)
 })
 
 app.get("/getMoney", (req: ExpressRequest, res: Response) => {
@@ -132,4 +136,4 @@ app.get("/coinFlip", (req: ExpressRequest, res: Response) => {
 	}
 })
 
-app.listen(3000, () => console.log("Server is up"))
+server.listen(3000, () => console.log("Server is up"))
