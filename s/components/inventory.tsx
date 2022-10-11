@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { ActivityIndicator, ScrollView } from "react-native";
 import BlurView from "expo-blur/build/BlurView";
 import {styles} from "../styles/inventoryStyles"
 import { cases } from "../components/chestShop/cases"
@@ -11,6 +11,7 @@ import { getLocalStorageData, removeAndGetLocalStorageData } from "../helperFunc
 const Inventory = () => {
 const userStore = useContext(UserStore);
 const [inventoryItems, setInventoryItems] = useState([])
+const [dataLoading, setDataLoading] = useState(false)
 
 	const getSkinImage = (i: number) => {
 		if (inventoryItems.length > 0) {
@@ -19,13 +20,15 @@ const [inventoryItems, setInventoryItems] = useState([])
 					return inventoryItems?.[i]?.name?.includes(skinName)
 				})
 			}).filter(arr => arr.length > 0).flat(5)
-			return items[0]
+			return items[0]?.image
 		} else return undefined
 	}
 
 	async function removeItemFromLocalStorage(index: number) {
 		if (inventoryItems.length > 0) {
+			setDataLoading(true)
 			const inventoryData = await removeAndGetLocalStorageData(index)
+			if(inventoryData) {setDataLoading(false)}
 			setInventoryItems([...inventoryData])
 		}
 	}
@@ -47,12 +50,14 @@ const [inventoryItems, setInventoryItems] = useState([])
 					{inventoryItems?.map(({name, price}, i) =>
 					<View style={styles.item}>
 						<BlurView style={styles.iconContainer} intensity={100}>
-							<Image style={styles.icon} source={getSkinImage(i)?.image} />
+							<Image style={styles.icon} source={getSkinImage(i)} />
 						</BlurView>
-						<Text style={styles.itemText}>{name}</Text>
-						<Pressable onPress={async () => {sellItem(userStore, name), await removeItemFromLocalStorage(i)}}>
-							<Text style={styles.textSell}>Sell {price?.['24_hours'].average}$</Text>
-						</Pressable>
+							<Text style={styles.itemText}>{name}</Text>
+							{dataLoading
+								? <ActivityIndicator size="small" />
+								: <Pressable onPress={async () => { sellItem(userStore, name), await removeItemFromLocalStorage(i) }}>
+										<Text style={styles.textSell}>Sell {price?.['24_hours'].average}$</Text>
+									</Pressable>}
 					</View>)}
 				</View>
 			</ScrollView>
