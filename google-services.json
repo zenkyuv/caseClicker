@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "434988569004",
+    "project_id": "csgocases-85eab",
+    "storage_bucket": "csgocases-85eab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:434988569004:android:bf32aadd1a1eb88462aa09",
+        "android_client_info": {
+          "package_name": "com.zenkyu.csgocases"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "434988569004-9pg7jbt49ig66jt72u8rc126nbm92aa1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3cOGDRLzBraOCAEBqPP-3Aprj-SnZavU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "434988569004-9pg7jbt49ig66jt72u8rc126nbm92aa1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "434988569004-vg1jo285c24bq8aaj2efekrcjdvjlnth.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zenkyu.csgocases"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
