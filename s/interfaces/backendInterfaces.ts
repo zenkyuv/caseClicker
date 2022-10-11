@@ -10,7 +10,8 @@ export interface ExpressRequest extends Request {
 	body: {
 		caseName: string,
 		idToken: string,
-		item: string
+		item: string,
+		uid: string
 	},
 	query: {
 		idToken: string,
