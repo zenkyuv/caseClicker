@@ -2,9 +2,8 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 	container: {
-		flex: 7,
-		margin: 20,
-		width: "70%",
+		flex: 1,
+		margin: 10,
 	},
 	text: {
 		margin: 10,
@@ -16,22 +15,26 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 		flexWrap: "wrap",
 		width: "100%",
-		
 	},
 	iconContainer: {
+		width: '80%',
+		height: 50,
 		borderLeftWidth: 3,
-		borderColor: "red"
+		borderColor: "red",
+		alignItems: 'center',
+		justifyContent: 'center'
 	},
 	icon: {
-		width: 80,
-		height: 60,
+		width: '80%',
+		height: 40,
 		// borderColor: "red"
 	},
 	item: {
-		flexBasis: "18%",
-		margin: "1%",
-		padding: "2%",
-		alignItems: "flex-start"
+		width: "20%",
+		// margin: "1%",
+		// padding: "2%",
+		alignItems: 'center',
+		justifyContent: 'space-between'
 		
 	},
 	textContainer: {
@@ -40,11 +43,16 @@ export const styles = StyleSheet.create({
 		position: "absolute"
 	},
 	itemText: {
-		alignSelf: "flex-start",
-		color: "white"
+		color: "white",
+		fontSize: 8,
+		textAlign: 'center'
 	},
-	itemText1: {
-		alignSelf: "flex-start",
-		color: "rgba(255,255,255,.6)"
+	textSell: {
+		color: 'yellow',
+		fontSize: 8,
+		padding: 4,
+		borderRadius: 8,
+		backgroundColor: '#ffff0082',
+		margin: 5,
 	}
 });
