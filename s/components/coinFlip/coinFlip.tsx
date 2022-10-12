@@ -1,10 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react"
-import { View, Text, Dimensions, Pressable, Image, TextInput } from "react-native"
-import { VictoryBar, VictoryChart, VictoryTheme, VictoryLine } from "victory-native";
-import { LineChart, ProgressChart, ContributionGraph } from "react-native-chart-kit"
-import { Dataset } from "react-native-chart-kit/dist/HelperTypes";
-import { LineChartData } from "react-native-chart-kit/dist/line-chart/LineChart";
-import AnimateNumber from 'react-native-animate-number'
+import { useContext, useState } from "react"
+import { View, Text, Pressable, Image, TextInput } from "react-native"
 import { BlurView } from "expo-blur";
 import { getIdToken, getMoney } from "../../userApiActions/userApiActions";
 import UserStore from "../../states-store/states/userStore";

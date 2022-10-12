@@ -4,7 +4,6 @@ import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithE
 import { UserStore } from "../states-store/states/userStore";
 import { signUserInfo, UserMoney } from "../interfaces/frontendInterfaces";
 import { getInventory, getMoney } from "../userApiActions/userApiActions";
-// import AppCheck from '@react-native-firebase/app-check';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqW5tht_dhCf7Bgbl--4dVXefLpN6E978",
