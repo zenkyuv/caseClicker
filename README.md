@@ -1,6 +1,6 @@
 # Installation ⚙  
 
-1.`git clone -c core.longpaths=true git@github.com:zenkyuv/caseClicker.git`  
+1.`git clone -c core.longpaths=true https://github.com/zenkyuv/caseClicker.git`  
 2.`npm install`  
 3.`npm run start` or incase its not working `expo start --tunnel`
 # Features ✨ 
