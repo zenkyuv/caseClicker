@@ -11,7 +11,8 @@ export interface ExpressRequest extends Request {
 		caseName: string,
 		idToken: string,
 		item: string,
-		uid: string
+		uid: string,
+		username: string
 	},
 	query: {
 		idToken: string,
