@@ -68,15 +68,15 @@ const connection = mongoose.connect(
     } as ConnectOptions
 );
 
-const createUser = async (uid: string) => {
+const createUser = async (uid: string, username: string) => {
 	try {
-		await	new User({_id: uid, name: "Przemek", money: "0", inventory: []}).save()
+		await	new User({_id: uid, name: username, money: "0", inventory: []}).save()
 	} catch (err) {
 		console.log(err)
 	}
 }
 app.post("/createUser", (req: ExpressRequest, res: Response) => {
-	createUser(req.body.uid)
+	createUser(req.body.uid, req.body.username)
 })
 
 app.get("/getMoney", (req: ExpressRequest, res: Response) => {
