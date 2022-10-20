@@ -18,21 +18,30 @@ export default function SignPanel(props: any) {
 		createUser({ userData, userStore })
 	}
 
-console.log(showPanel.signIn)
 	const handleSignIn = (userData: any) => {
 		signUser({ userData, userStore });
 	}
 	return (<View style={styles.container}>
-		<Formik initialValues={{ email: "", password: "" }}
+		<Formik initialValues={{ email: "", password: "", username: "" }}
 			onSubmit={values => showPanel.signIn ? handleSignIn(values) : handleSignUp(values)}
 		>
 			{({ handleChange, handleBlur, handleSubmit, values }) => (
 				<>
+					{showPanel.signUp ? <>
+						<Text>Username</Text>
+						<TextInput
+						onChangeText={handleChange('username')}
+						style={styles.textInput}
+						value={values.username}
+						maxLength={20}
+						/>
+					</> : null}
 					<Text>Email</Text>
 					<TextInput
 						onChangeText={handleChange('email')}
 						style={styles.textInput}
 						value={values.email}
+						maxLength={30}
 					/>
 					<Text>Password</Text>
 					<TextInput
@@ -41,6 +50,7 @@ console.log(showPanel.signIn)
 						onChangeText={handleChange('password')}
 						style={styles.textInput}
 						value={values.password}
+						maxLength={30}
 					/>
 					<Text style={styles.smallText}>{showPanel.signIn ? "Not registered yet?" : "Back to "}
 						<Text onPress={() => setPanel({
