@@ -2,16 +2,19 @@ import { applicationDefault, initializeApp } from 'firebase-admin/app';
 import express, { NextFunction, Response } from "express";
 import { ExpressRequest } from "../interfaces/backendInterfaces";
 import mongoose, { ConnectOptions } from "mongoose";
-import websocketServer from './socketServer.js';
+import websocketServer from './websocketServer/socketServer.js';
 import bodyParser from "body-parser";
 import openCase from './openCase.js';
 import pkg from "firebase-admin";
 import * as dotenv from 'dotenv'
 import cors from 'cors';
 import ip from "ip"
-import { User } from './mongooseModels.js';
-import {createServer} from "http"
-dotenv.config()
+import { User } from './mongoose/mongooseModels.js';
+import { createServer } from "http"
+import path from "path"
+dotenv.config({ path: path.resolve('.env') })
+console.log(dotenv.config({ path: path.resolve('.env') }))
+console.log(process.env.MONGODB_URL)
 const { auth, credential } = pkg;
 const app = express()
 const server = createServer(app)
