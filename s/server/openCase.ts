@@ -2,7 +2,7 @@ import { Response } from "express";
 import { getRandomInt } from "../helperFunctions/getRandomInt.js";
 import { getSkinRarityBackend } from "./helperFunctions/getSkinRarity.js";
 import { getSkinWear } from "./helperFunctions/getSkinWear.js";
-import { cases, User } from "./mongooseModels.js";
+import { cases, User } from "./mongoose/mongooseModels.js";
 
 const openCase = (caseName: string, response: Response, id: string) => {
 	"use strict";
