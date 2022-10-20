@@ -7,6 +7,7 @@ export class UserStore {
   userUID:string = '';
 	@observable dbDataLoading: boolean = true;
 	@observable money: number = 0
+	@observable username: string = ''
 
   constructor() {
     makeObservable(this);
@@ -32,6 +33,11 @@ export class UserStore {
   setUserUID(uid: any) {
     this.userUID = uid;
   }
+
+	@action
+	setUsername(username: string) {
+		this.username = username
+	}
 
   @action
   isDbDataLoading(boolean: boolean) {
