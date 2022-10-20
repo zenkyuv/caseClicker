@@ -7,7 +7,8 @@ export interface UserMoney {
 
 export interface UserData {
 	email: string,
-	password: string
+	password: string,
+	username: string
 }
 
 export interface signUserInfo {
