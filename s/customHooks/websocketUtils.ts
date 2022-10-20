@@ -1,16 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
-  Contextable,
+	ConnectFN,
+  LobbyUser,
+  RoomCreator,
+  // Contextable,
   SessionConnectHandler,
   SessionDisconnectHandler,
   SessionHook,
-  SessionMessageHnalder,
+  SessionMessageHandler,
 } from '../interfaces/websocketTypes';
 
 export function useSession(
   onOpen: SessionConnectHandler,
-  onMessage: SessionMessageHnalder,
-  onClose: SessionDisconnectHandler
+  onMessage: SessionMessageHandler,
+	onClose: SessionDisconnectHandler,
+	userID: string
 ): SessionHook {
   const [session, setSession] = useState(null as unknown as WebSocket);
 
@@ -40,24 +44,32 @@ export function useSession(
 
   useEffect(updateOpenHandler, [session, onOpen]);
   useEffect(updateMessageHandler, [session, onMessage]);
-  useEffect(updateCloseHandler, [session, onClose]);
-
+	useEffect(updateCloseHandler, [session, onClose]);
+	useEffect(() => {
+		return () => {
+			if (session) close()
+		}
+	}, [session])
   const connect = useCallback(
-		(clientID, action) => {
+		(data: RoomCreator | LobbyUser) => {
 			// ?clientID=${clientID}&action=${action}
+			console.log("halo")
       const uri = `ws://192.168.109.129:3000`
 			const ws = new WebSocket(uri);
+			ws.onopen = () => ws.send(JSON.stringify(data))
 			setSession(ws);
     },
     []
   );
 
-  const sendMessage = <T extends any>(args: T) => {
-    session.send(JSON.stringify(args));
+	const sendMessage = <T extends any>(args: T) => {
+		if (!session) return;
+			session.send(JSON.stringify(args));
   };
 
-  const close = useCallback(() => {
-    if (session.readyState === session.OPEN) session.close(1001);
+	const close = useCallback(() => {
+		console.log('closed')
+    if (session.readyState === session.OPEN) session.close(1000, userID);
   }, [session]);
 
   return [connect, sendMessage, close];
