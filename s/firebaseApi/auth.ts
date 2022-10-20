@@ -4,6 +4,7 @@ import {createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithE
 import { UserStore } from "../states-store/states/userStore";
 import { signUserInfo, UserMoney } from "../interfaces/frontendInterfaces";
 import { getInventory, getMoney } from "../userApiActions/userApiActions";
+import { getUsername, saveUsername } from "../helperFunctions/localStorageFunctions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAqW5tht_dhCf7Bgbl--4dVXefLpN6E978",
@@ -24,16 +25,18 @@ const auth = getAuth();
 function createUser({ userData, userStore }: signUserInfo) {
 	const email:string = userData.email
 	const password: string = userData.password
+	const username: string = userData.username
   createUserWithEmailAndPassword(auth, email, password).then(
     (cred: any) => {
       const user = cred.user;
       if (user) {
         userStore.loginUser();
 				userStore.setUserUID(user.uid);
+				saveUsername(username)
 					auth.currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
   // Send token to your backend via HTTPS
 					fetch("http://141.94.85.161:3000/createUser", {
-					body: JSON.stringify({idToken: idToken, uid: user.uid}),
+					body: JSON.stringify({idToken: idToken, uid: user.uid, username: username}),
 						method: "POST",
 						headers: {
 				"Content-type": "application/json"
@@ -59,9 +62,11 @@ function signUser (
       const user = userCredential.user;
 			if (user) {
 				await getInventory()
+				const username = await getUsername()
 				console.log('logged')
         userStore.loginUser();
 				userStore.setUserUID(user.uid);
+				userStore.setUsername(username)
 				getMoney(userStore)
         // setLoadingIndicator(false);
         // SetPr(email.value, password.value);
