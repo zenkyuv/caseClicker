@@ -53,7 +53,6 @@ export function useSession(
   const connect = useCallback(
 		(data: RoomCreator | LobbyUser) => {
 			// ?clientID=${clientID}&action=${action}
-			console.log("halo")
       const uri = `ws://192.168.109.129:3000`
 			const ws = new WebSocket(uri);
 			ws.onopen = () => ws.send(JSON.stringify(data))

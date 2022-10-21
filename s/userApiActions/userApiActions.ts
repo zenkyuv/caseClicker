@@ -29,7 +29,6 @@ export const getMoney = (userStore: UserStore) => {
 }
 	
 export const sellItem = (userStore: UserStore, item: string) => {
-	console.log(item)
 	return getIdToken().then((idToken: string) => {
 		fetch("http://141.94.85.161:3000/sellItem", {
 					body: JSON.stringify({idToken: idToken, item: item}),

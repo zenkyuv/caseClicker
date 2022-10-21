@@ -15,7 +15,6 @@ export class UserStore {
 
 	@action
 	setUserMoney(money: number) {
-		console.log(money)
 		this.money = money
 	}
 

@@ -33,3 +33,24 @@ export const removeAndGetLocalStorageData = async (index: number) => {
 		return data
 	} else return null
 }
+
+export const saveUsername = async (username: string) => {
+	try {
+		await AsyncStorage.setItem('@username', username)
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+export const getUsername = async () => {
+	try {
+		const username = await AsyncStorage.getItem('@username')
+		if (username !== null) {
+			return username
+		} else if (!username) {
+			// fetch username from database
+		}
+	} catch (err) {
+		console.log(err)
+	}
+}
