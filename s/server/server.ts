@@ -2,7 +2,7 @@ import { applicationDefault, initializeApp } from 'firebase-admin/app';
 import express, { NextFunction, Response } from "express";
 import { ExpressRequest } from "../interfaces/backendInterfaces";
 import mongoose, { ConnectOptions } from "mongoose";
-import websocketServer from './websocketServer/socketServer.js';
+import websocketServer from './websocketServer/websocketServer.js';
 import bodyParser from "body-parser";
 import openCase from './openCase.js';
 import pkg from "firebase-admin";
