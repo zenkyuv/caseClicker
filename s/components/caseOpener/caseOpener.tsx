@@ -5,13 +5,14 @@ import { LinearGradient } from "expo-linear-gradient"
 import { styles } from "../../styles/caseOpenerStyles"
 import { caseOpenerAnimation } from "./caseOpenerAnimation"
 import { openCase } from "../../userApiActions/userApiActions"
-import { caseData } from "../../interfaces/frontendInterfaces"
+import { caseData, skin } from "../../interfaces/frontendInterfaces"
 import { useComponentSize } from "../../customHooks/useComponentSize"
 import { getSkinRarityFrontend } from "../../helperFunctions/getSkinRarity"
 import { Animated, Image, Pressable, ScrollView, Text, View } from "react-native"
+import { Item } from "../../interfaces/sharedInterfaces"
 
 const CaseOpener = ({name, image, skins}: caseData) => {
-	const [drawnSkin, setDrawnSkin] = useState(undefined)
+	const [drawnSkin, setDrawnSkin] = useState<Item>(undefined)
 	const [size, onLayout] = useComponentSize();
 	const [imageSize, setImageSize] = useComponentSize()
 	const [randomSkinsArray, setRandomSkinsArray] = useState([])
@@ -26,8 +27,8 @@ const CaseOpener = ({name, image, skins}: caseData) => {
 
 	const thisCase = cases.filter(({ _id }) => _id == name)[0]
 
-	const getRandomSkins = (drawnSkin: any) => {
-		const randomSkinsArray = [...thisCase.skins].sort(() => 0.5 - Math.random())
+	const getRandomSkins = (drawnSkin: Item) => {
+		const randomSkinsArray: any[] = [...thisCase.skins].sort(() => 0.5 - Math.random())
 		for (let i = randomSkinsArray.length; i <= 34; i++) {
 			const skinQuality = getSkinRarityFrontend()
 			const shuffled = [...thisCase.skins].filter(({quality}) => quality == skinQuality).sort(() => 0.5 - Math.random()).slice(0, 1)

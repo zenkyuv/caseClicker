@@ -1,22 +1,22 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, Image } from "react-native"
 import UserStore from "../../../../states-store/states/userStore";
-import { BlurView } from "expo-blur";
 import  {onopen, onmessage, onclose}  from "../utils/utils"
-import {styles} from "../../../../styles/tradeLobbyStyles"
-import { getLocalStorageData, getUsername } from "../../../../helperFunctions/localStorageFunctions";
 import { useSession } from "../../../../customHooks/websocketUtils";
-import { getYourSkinsImages } from "../../../../helperFunctions/getImages";
 import RenderTradePanel from "../../shared/renderTradePanel";
+import { ConnectedUserData } from "../../../../interfaces/frontendInterfaces";
 
 const CreatePublicTrade = () => {
 	const userStore = useContext(UserStore)
 	const [userJoined, setUserJoined] = useState(false)
-	const [connectedUserSelectedInventoryItems, setConnectedUserSelectedInventoryItems] = useState([])
+	const [connectedUserData, setConnectedUserData] = useState<ConnectedUserData>()
+	const [offerAccepted, setOfferAccepted] = useState({
+		byYou: false,
+		byConnectedUser: false
+	})
 	const onOpenHandler = (data) => {onopen(data, sendMessage)}
 	const onCloseHandler = () => { onclose() }
 	const onMessageHandler = (data) => {
-		onmessage(data, setUserJoined, setConnectedUserSelectedInventoryItems)
+		onmessage(data, setUserJoined, setConnectedUserData, setOfferAccepted)
 	}
 	const [connect, sendMessage, closeConn] = useSession(
 		onOpenHandler,onMessageHandler, onCloseHandler, userStore.userUID
@@ -26,7 +26,6 @@ const CreatePublicTrade = () => {
 			action: 'userCreatedPublicTradeRoom',
 			roomID: userStore.userUID,
 			username: userStore.username,
-			userType: 'roomCreator'
 		})
 		}, [])
 	useEffect(() => {
@@ -38,7 +37,13 @@ const CreatePublicTrade = () => {
 
 	return (
 		<>
-			<RenderTradePanel connectedUserSelectedInventoryItems={connectedUserSelectedInventoryItems} userType={"roomCreator"} userJoined={userJoined} onOpenHandler={onOpenHandler} />
+			<RenderTradePanel
+				offerAccepted={offerAccepted}
+				setOfferAccepted={setOfferAccepted}
+				data={connectedUserData}
+				userType={"roomCreator"}
+				userJoined={userJoined}
+				onOpenHandler={onOpenHandler} />
 		</>
 	)
 }
