@@ -1,28 +1,18 @@
-import { BlurView } from "expo-blur"
 import { useContext, useEffect, useState } from "react"
-import { View, ScrollView, Text, Image, Pressable } from "react-native"
-import { getYourSkinsImages } from "../../../helperFunctions/getImages"
+import { View } from "react-native"
 import { getLocalStorageData } from "../../../helperFunctions/localStorageFunctions"
+import { RenderPanelArgs } from "../../../interfaces/frontendInterfaces"
+import { Item } from "../../../interfaces/sharedInterfaces"
 import UserStore from "../../../states-store/states/userStore"
-import {styles} from "../../../styles/tradeLobbyStyles"
-import { renderConnectedUserInventory } from "./renderConnectedUserInventory"
 import { renderSelectedInventoryItems } from "./renderSelectedInventoryItems"
 import { renderYourInventory } from "./renderYourInventory"
-import { addItemToTrade, removeItremFromTrade } from "./utils"
 
 const RenderTradePanel = (
-	{onOpenHandler,
-		userJoined,
-		userType,
-		connectedUserSelectedInventoryItems
-	}
+	{...args}: RenderPanelArgs
 ) => {
-	console.log(onOpenHandler, userJoined)
 	const userStore = useContext(UserStore)
-	const [inventoryItems, setInventoryItems] = useState([])
-	const [selectedInventoryItems, setSelectedInventoryItems] = useState([])
-	// if userType is roomCreator then get data from the user that connected to your Lobby
-	// if userType is userFromLobby then get data from room that you connected to
+	const [inventoryItems, setInventoryItems] = useState<Item[]>([])
+	const [selectedInventoryItems, setSelectedInventoryItems] = useState<Item[]>([])
 		useEffect(() => {
 		const localStorageData = async () => {
 			const data = await getLocalStorageData()
@@ -33,13 +23,12 @@ const RenderTradePanel = (
 	return(
 		<View style={{flexDirection: 'row', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 				{renderYourInventory(
-						inventoryItems,
-						setInventoryItems,
-						selectedInventoryItems,
-						setSelectedInventoryItems,
-						userStore.userUID,
-						onOpenHandler,
-						userType
+					inventoryItems,
+					setInventoryItems,
+					selectedInventoryItems,
+					setSelectedInventoryItems,
+					userStore.userUID,
+					args
 			)}
 				{
 					renderSelectedInventoryItems(
@@ -47,10 +36,7 @@ const RenderTradePanel = (
 						setSelectedInventoryItems,
 						setInventoryItems,
 						userStore.userUID,
-						onOpenHandler,
-						userJoined,
-						connectedUserSelectedInventoryItems,
-						userType,
+						args
 					)}
 		</View>)
 }
