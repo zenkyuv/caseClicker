@@ -1,29 +1,47 @@
-import WebSocket from "ws"
+import { Item } from "../../../interfaces/sharedInterfaces"
 
-export interface Inventory {
-	skin: string
+export interface UserCreatedPublicTradeRoom {
+	roomID: string,
+	username: string
 }
 
-export interface Client {
-	clientID?: string,
-	inventory?: Inventory[],
-	room: 'publicRoom' | 'privateRoom' | 'publicLobby',
-	clientConnection?: WebSocket,
-	username?: string,
-	roomEmpty?: boolean
+export interface UserAddedItemToTrade {
+	selectedItem: Item,
+	clientID: string,
+	userType: "roomJoiner" | "roomCreator"
 }
 
-export interface RemoveItem {
-		indexToRemove: number,
-		clientID: string
+export interface UserRemovedItemFromTrade {
+	indexToRemove: number,
+	clientID: string,
+	userType: "roomJoiner" | "roomCreator"
 }
 
-export interface AddItem {
-	selectedItem: any,
+export interface CreatePrivateTradeLobby {
+
+}
+
+export interface UserAcceptedOffer {
+	clientID: string,
+	userType: string
+}
+
+export interface UserJoinedPublicTradeLobby {
+	clientID: string,
+}
+
+export interface JoinPrivateTradeLobby {
+
+}
+
+export interface UserJoinedPublicTradeRoom {
+	roomToConnectTo: string,
 	clientID: string
 }
-
 export interface Data {
-		data: Client[],
-		action?: 'refreshWithNewData'
+	data: UserCreatedPublicTradeRoom | UserJoinedPublicTradeLobby | UserJoinedPublicTradeLobby |
+	UserAcceptedOffer | UserRemovedItemFromTrade | UserAddedItemToTrade,
+	action?: "userCreatedPublicTradeRoom" | "userAddedItemToTrade" | "userRemovedItemFromTrade" 
+	| "createPrivateTradeLobby" | "userAcceptedOffer" | "userJoinedPublicTradeLobby" 
+	| "joinPrivateTradeLobby" | "userJoinedPublicTradeRoom"
 }
