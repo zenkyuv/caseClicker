@@ -1,53 +1,41 @@
 import { publicRoomCreators } from "../roomMechanics/publicRoomCreators.js"
 import { userAction } from "../roomMechanics/userActions.js"
 import { usersInLobby } from "../roomMechanics/usersInLobby.js"
+import WebSocket from "ws";
+import { UserAcceptedOffer, UserAddedItemToTrade, UserCreatedPublicTradeRoom, UserRemovedItemFromTrade, UserJoinedPublicTradeRoom, UserJoinedPublicTradeLobby } from "../websocketModels/clientModel.js";
 
 export const serverside = {
 
-	async userCreatedPublicTradeRoom({ roomID, username }, clientConnection) {
+	async userCreatedPublicTradeRoom({ roomID, username }: UserCreatedPublicTradeRoom, clientConnection: WebSocket) {
 		publicRoomCreators.addRoomCreator(roomID, clientConnection, username)
-		publicRoomCreators.broadcastMessage(roomID, 'refreshWithNewData')
   },
 
-  async userAddedItemToTrade({selectedItem, clientID, userType}) {
-		if (userType == 'roomCreator') {
-			console.log('room creator')
-			userAction.addItem(clientID, selectedItem, publicRoomCreators.getType())
-			publicRoomCreators.broadcastMessage(clientID, 'refreshWithNewData')
-		}
-		if (userType == 'userFromLobby') {
-			console.log('lobby user')
-			userAction.addItem(clientID, selectedItem, usersInLobby.getType())
-			usersInLobby.broadcastMessage(clientID)
-		}
+  async userAddedItemToTrade({selectedItem, clientID, userType}: UserAddedItemToTrade) {
+		userAction.addItem(clientID, selectedItem, userType)
   },
 
-	async userRemovedItemFromTrade({ indexToRemove, clientID, userType }) {
-		if (userType == 'roomCreator') {
-			userAction.removeItem(clientID, indexToRemove, publicRoomCreators.getType())
-			publicRoomCreators.broadcastMessage(clientID, 'refreshWithNewData')
-		}
-		if (userType == 'userFromLobby') {
-			userAction.removeItem(clientID, indexToRemove, usersInLobby.getType())
-			usersInLobby.broadcastMessage(clientID)
-		}
+	async userRemovedItemFromTrade({ indexToRemove, clientID, userType }: UserRemovedItemFromTrade) {
+		userAction.removeItem(clientID, indexToRemove, userType)
 	},
 	
-	async createPrivateTradeLobby() {
-
+	async userAcceptedOffer({ userType, clientID }: UserAcceptedOffer, clientConnection: WebSocket) {
+		userAction.userAcceptedOffer(userType, clientID, clientConnection)
 	},
 
-	async userJoinedPublicTradeLobby({clientID}, clientConnection) {
-		const data = { data: publicRoomCreators.getEmptyRooms(), action: 'refreshWithNewData' }
+	async userJoinedPublicTradeLobby({clientID}: UserJoinedPublicTradeLobby, clientConnection: WebSocket) {
 		usersInLobby.addUserToLobby(clientID, clientConnection)
-		clientConnection.send(JSON.stringify(data))
 	},
 
-	async joinPrivateTradeLobby() {
-
-	},
-
-	async userJoinedPublicTradeRoom({roomToConnectTo, clientID}, clientConnection) {
+	async userJoinedPublicTradeRoom({roomToConnectTo, clientID}: UserJoinedPublicTradeRoom, clientConnection: WebSocket) {
 		usersInLobby.joinPublicRoom(roomToConnectTo, clientID, clientConnection)
 	}
+
+	// async createPrivateTradeLobby() {
+
+	// },
+
+	// async joinPrivateTradeLobby() {
+
+	// },
+
 }
