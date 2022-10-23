@@ -1,16 +1,17 @@
 import { BlurView } from "expo-blur"
 import { View, ScrollView, Text, Image } from "react-native"
 import { getYourSkinsImages } from "../../../helperFunctions/getImages"
+import { RenderPanelArgs } from "../../../interfaces/frontendInterfaces"
 import { styles } from "../../../styles/tradeLobbyStyles"
 
-export const renderConnectedUserInventory = (userJoined, connectedUserSelectedInventoryItems) => {
+export const renderConnectedUserInventory = ({...args}: RenderPanelArgs) => {
 	return(<>
-		{userJoined ? <ScrollView>
+		{args?.userJoined ? <ScrollView>
 			<Text>Connected user selected items:</Text>
 					<View style={styles.itemsContainer}>
-						{connectedUserSelectedInventoryItems.inventory?.map(({ name, price }, i) => <View style={styles.item}>
+						{args?.data?.selectedInventoryItems?.map(({ name, price }, i) => <View style={styles.item}>
 							<BlurView style={styles.iconContainer} intensity={100}>
-								<Image style={styles.icon} source={getYourSkinsImages(connectedUserSelectedInventoryItems.inventory, i)} />
+								<Image style={styles.icon} source={getYourSkinsImages(args?.data?.selectedInventoryItems, i)} />
 							</BlurView>
 							<Text style={styles.itemText}>{name}</Text>
 						</View>)}
