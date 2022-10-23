@@ -9,20 +9,12 @@ export type SessionHook = [
 ];
 
 export interface RoomCreator {
-	roomID?: string,
+	roomID: string,
 	action: string,
-	inventory?: any[],
-	room?: 'publicRoom' | 'privateRoom' | 'publicLobby',
-	username?: string,
-	userType: 'roomCreator',
+	username: string,
 }
 export interface LobbyUser {
 	clientID: string,
-	connection?: WebSocket,
-	roomYouConnectedTo?: WebSocket,
-	connectedToRoom?: boolean,
-	inventory?: [],
-	userType: 'userFromLobby',
 	action: string
 }
 export type ConnectFN = (
