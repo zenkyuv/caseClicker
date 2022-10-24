@@ -95,7 +95,9 @@ app.put("/addMoney", (req: ExpressRequest, res: Response) => {
 })
 
 app.get("/openCase", async (req: ExpressRequest, res: Response) => {
-	openCase(req.query.caseName, res, req.idToken)
+	try {
+		openCase(req.query.caseName, res, req.idToken)
+	} catch (err) {console.log(err)}
 })
 
 app.put("/sellItem", (req: ExpressRequest, res: Response) => {

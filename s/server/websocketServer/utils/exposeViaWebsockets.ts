@@ -9,7 +9,7 @@ export const exposeViaWebsockets = (websocketConnection: WebSocket) => {
 				const serversideFunction = serverside[userData.action]
 				if (serversideFunction) {
 					try {
-					await serversideFunction(userData.data, websocketConnection)
+					await serversideFunction(userData, websocketConnection)
 				} catch (err) {
 					console.log(err)
 				}
