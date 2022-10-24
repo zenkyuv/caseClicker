@@ -19,7 +19,7 @@ export const addMoney = (userStore: UserStore) => {
 	})
 	}
 export const getMoney = (userStore: UserStore) => {
-	let data: any;
+	let data: UserMoney;
 	getIdToken().then((idToken: string) => {
 		fetch(`http://141.94.85.161:3000/getMoney?idToken=${idToken}`, {
 			method: "GET"
