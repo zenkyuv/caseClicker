@@ -1,10 +1,11 @@
 import { cases } from "../components/caseShop/cases"
+import { PublicRoomData } from "../interfaces/frontendInterfaces"
 
-export const getSkinsImagesFromAllConnectedUsers = (publicLobbies: any, firstIndex: number, secondIndex: number) => {
-	if (publicLobbies?.length > 0) {
+export const getSkinsImagesFromAllConnectedUsers = (publicRooms: PublicRoomData[], firstIndex: number, secondIndex: number) => {
+	if (publicRooms?.length > 0) {
 		const items = cases.map(({ skins }) => {
 			return skins.filter(({ skinName }) => {
-			return publicLobbies?.[firstIndex]?.inventory?.[secondIndex]?.name?.includes(skinName)
+			return publicRooms?.[firstIndex]?.selectedInventoryItems?.[secondIndex]?.name?.includes(skinName)
 			
 			})
 		}).filter(arr => arr.length > 0).flat(5)
