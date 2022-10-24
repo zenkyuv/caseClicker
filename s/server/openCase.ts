@@ -5,11 +5,10 @@ import { getSkinWear } from "./helperFunctions/getSkinWear.js";
 import { cases, User } from "./mongoose/mongooseModels.js";
 
 const openCase = (caseName: string, response: Response, id: string) => {
-	"use strict";
 	const skinRarity = getSkinRarityBackend()
 	const skinWear = getSkinWear()
 	cases.findOne({ _id: caseName }).select(
-		`skins.${skinRarity}.${skinWear}`).exec(
+		`skins.${skinRarity}.${skinWear}`)?.exec(
 			(err, res) => { 
 				const arrLength = res.skins[skinRarity][skinWear].length
 				const randomIndex = getRandomInt(0, arrLength - 1)
@@ -19,7 +18,8 @@ const openCase = (caseName: string, response: Response, id: string) => {
 					inventory: choosenSkin
 				}}).exec((err,res) => console.log(err,res))
 				response.send(choosenSkin)
-		}		
+				console.log(err)
+		}
 	)
 }
 
