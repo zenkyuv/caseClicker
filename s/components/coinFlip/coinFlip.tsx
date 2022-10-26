@@ -4,14 +4,7 @@ import { BlurView } from "expo-blur";
 import { getIdToken, getMoney } from "../../userApiActions/userApiActions";
 import UserStore from "../../states-store/states/userStore";
 import { coinFlipData } from "../../interfaces/frontendInterfaces";
-
-
-export function getCrashPoint() {
-	const e = 2**32
-	const h = crypto.getRandomValues(new Uint32Array(1))[0]
-	return Math.floor((100*e-h) / (e-h)) / 100
-}
-
+import { styles } from "../../styles/coinFlipStyles";
 
 const CoinFlip = () => {
 	const [winnerCoin, setWinnerCoin] = useState<null | coinFlipData>(null)
@@ -29,31 +22,39 @@ getIdToken().then((idToken: string) => {
 					headers: {
 				"Content-type": "application/json"
 			}
-				}).then(res => res.json()).then((data:coinFlipData) => { console.log(data), setWinnerCoin(data), getMoney(userStore), setSelectedCoin(data.drawnCoin), setGameStarted(false) })
+				}).then(res => res.json()).then((data:coinFlipData) => { setWinnerCoin(data), getMoney(userStore), setSelectedCoin(data.drawnCoin), setGameStarted(false) })
 			})
 			}, 3000)
 		}
-		console.log(Math.floor(Math.random()*2))
 	}
 	return (
-		<View style={{flex: 1, alignItems: 'center', justifyContent: 'space-around'}}>
+		<View style={styles.container}>
 				{gameStarted
-					? <Image style={{ width: '23%', height: '40%' }} source={require("../../images/coinflip.webp")} />
-					: <Image style={{ width: '23%', height: '40%' }} source={selectedCoin == 1 ? require("../../images/coinflip-ct.webp") : selectedCoin == 0 ? require("../../images/coinflip-tt.webp") : require("../../images/coinflip-ct.webp")} />}
-			<View style={{height: '15%', alignItems: 'center', justifyContent: 'space-between'}}>
-				<View style={{ flexDirection: 'row', alignItems: 'center' }}><Text>Select your bet:</Text><TextInput style={{ width: '10%', height: 15, backgroundColor: 'blue', borderRadius: 3, marginLeft: 5 }} onChangeText={onChangeNumber} value={number} keyboardType="numeric" /></View>
-				{winnerCoin ? <Text style={{color: winnerCoin.data == "You Lost!" ? 'red' : 'green'}}>{winnerCoin.data}</Text> : null}
-				<Pressable onPress={() => flip()} style={{backgroundColor: number ? 'green' : 'gray', borderRadius: 5, paddingLeft: 15, paddingRight: 15, paddingBottom: 3, paddingTop: 3, margin: 10}}><Text>Flip</Text></Pressable>
+					? <Image style={styles.coinImage} source={require("../../images/coinflip.webp")} />
+					: <Image style={styles.coinImage} source={selectedCoin == 1 ? require("../../images/coinflip-ct.webp") : selectedCoin == 0 ? require("../../images/coinflip-tt.webp") : require("../../images/coinflip-ct.webp")} />}
+			<View style={styles.selectBetContainer}>
+				<View style={styles.selectBetInputContainer}>
+					<Text>Select your bet:</Text>
+					<TextInput style={styles.selecteBetInput} onChangeText={onChangeNumber} value={number} keyboardType="numeric" />
+				</View>
+				{winnerCoin
+					? <Text style={{ color: winnerCoin.data == "You Lost!" ? 'red' : 'green' }}>
+					{winnerCoin.data}
+					</Text>
+					: null}
+				<Pressable onPress={() => flip()} style={[{ backgroundColor: number ? 'green' : 'gray' }, styles.flipTextContainer]}>
+					<Text>Flip</Text>
+				</Pressable>
 			</View>
-			<View style={{width: '100%', height: '40%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-			<Pressable style={{flex: 1, alignItems: 'flex-end',}} onPress={() => setSelectedCoin(1)}>
-					<BlurView intensity={30} tint={selectedCoin == 1 ? 'dark' : 'light'} style={{ width: '40%', height: '60%', backgroundColor: 'blue', borderTopLeftRadius: 40, borderBottomLeftRadius: 40, alignItems: 'center', justifyContent: 'center', borderLeftWidth: 5, borderColor: 'rgba(255,255,128, 0.3)' }}>
-						<Image style={{width: '50%', height: '70%'}} source={require("../../images/coinflip-ct.webp")} />
+			<View style={styles.coinButtonsContainer}>
+			<Pressable style={styles.coinButtonContainerLeft} onPress={() => setSelectedCoin(1)}>
+					<BlurView intensity={30} tint={selectedCoin == 1 ? 'dark' : 'light'} style={styles.buttonBlurContainerLeft}>
+						<Image style={styles.coinButtonContainerImage} source={require("../../images/coinflip-ct.webp")} />
 					</BlurView>
 			</Pressable>
-				<Pressable style={{flex: 1, alignItems: 'flex-start'}} onPress={() => setSelectedCoin(0)}>
-					<BlurView intensity={30} tint={selectedCoin == 0 ? 'dark' : 'light'} style={{ width: '40%', height: '60%', backgroundColor: 'yellow', borderTopRightRadius: 40, borderBottomRightRadius: 40, alignItems: 'center', justifyContent: 'center',borderRightWidth: 5, borderColor: 'rgba(255,128,55, 0.4)'}}>
-						<Image style={{width: '50%', height: '70%'}} source={require("../../images/coinflip-tt.webp")} />
+				<Pressable style={styles.coinButtonContainerRight} onPress={() => setSelectedCoin(0)}>
+					<BlurView intensity={30} tint={selectedCoin == 0 ? 'dark' : 'light'} style={styles.buttonBlurContainerRight}>
+						<Image style={styles.coinButtonContainerImage} source={require("../../images/coinflip-tt.webp")} />
 					</BlurView>
 				</Pressable>
 			</View>
